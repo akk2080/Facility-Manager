@@ -1,18 +1,16 @@
-package com.facility_manager.facility_reservation_manager.domain;
+package com.facility_manager.facility_reservation_manager.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -21,10 +19,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
 @Entity
+@Table(name = "\"User\"")
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public class Reservation {
+public class User {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -40,18 +39,8 @@ public class Reservation {
     )
     private Long id;
 
-    @Column(nullable = false)
-    private LocalDate reservationDate;
-
-    @Column(nullable = false)
-    private LocalTime startTime;
-
-    @Column(nullable = false)
-    private LocalTime endTime;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @OneToMany(mappedBy = "user")
+    private Set<Reservation> reservations;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

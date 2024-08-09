@@ -1,6 +1,6 @@
 package com.facility_manager.facility_reservation_manager.repos;
 
-import com.facility_manager.facility_reservation_manager.domain.User;
+import com.facility_manager.facility_reservation_manager.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
