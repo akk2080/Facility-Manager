@@ -3,6 +3,7 @@ package com.facility_manager.facility_reservation_manager.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 
@@ -10,6 +11,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 
 @Entity
@@ -39,13 +41,16 @@ public class Reservation {
     @Column(nullable = false)
     private FacilityType facilityType;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
     private LocalDate reservationDate;
 
-    @Column(nullable = false)
+    @DateTimeFormat(pattern = "HH:mm")
+    @Column
     private LocalTime startTime;
 
-    @Column(nullable = false)
+    @DateTimeFormat(pattern = "HH:mm")
+    @Column
     private LocalTime endTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -54,10 +59,10 @@ public class Reservation {
 
     @CreatedDate
     @Column(nullable = true, updatable = false)
-    private OffsetDateTime dateCreated;
+    private LocalDateTime dateCreated;
 
     @LastModifiedDate
     @Column(nullable = true)
-    private OffsetDateTime lastUpdated;
+    private LocalDateTime lastUpdated;
 
 }
