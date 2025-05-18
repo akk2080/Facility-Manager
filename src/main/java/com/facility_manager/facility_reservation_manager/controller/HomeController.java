@@ -1,5 +1,6 @@
 package com.facility_manager.facility_reservation_manager.controller;
 
+import com.facility_manager.facility_reservation_manager.exception.CapacityFullException;
 import com.facility_manager.facility_reservation_manager.model.Reservation;
 import com.facility_manager.facility_reservation_manager.model.User;
 import com.facility_manager.facility_reservation_manager.service.ReservationService;
@@ -43,17 +44,27 @@ public class HomeController {
 
     @PostMapping("/reservations-submit")
     public String reservationsSubmit(@ModelAttribute Reservation reservation,
-                                     @SessionAttribute("user") User user) {
+                                     @SessionAttribute("user") User user, Model model) {
 
-        // Save to DB after updating
-        assert user != null;
-        reservation.setUser(user);
-        reservationService.create(reservation);
-        Set<Reservation> userReservations = user.getReservations();
-        userReservations.add(reservation);
-        user.setReservations(userReservations);
-        userService.update(user.getId(), user);
-        return "redirect:/reservations";
+
+
+        try {
+            // Save to DB after updating
+            assert user != null;
+            reservation.setUser(user);
+            reservationService.create(reservation);
+            Set<Reservation> userReservations = user.getReservations();
+            userReservations.add(reservation);
+            user.setReservations(userReservations);
+            userService.update(user.getId(), user);
+            return "redirect:/reservations";
+
+        } catch (CapacityFullException e) {
+            model.addAttribute("capacityFullError", e.getMessage());
+
+            model.addAttribute("reservation", reservation); // Optional: to repopulate modal form
+            return "reservations"; // return the actual view name, NOT redirect
+        }
     }
 
 }
